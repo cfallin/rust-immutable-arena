@@ -1,0 +1,7 @@
+[package]
+name = "immutable_arena"
+version = "0.1.0"
+authors = ["Chris Fallin <cfallin@c1f.net>"]
+
+[dependencies]
+typed-arena = "^1.2.0"
