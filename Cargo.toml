@@ -5,3 +5,4 @@ authors = ["Chris Fallin <cfallin@c1f.net>"]
 
 [dependencies]
 typed-arena = "^1.2.0"
+smallvec = "^0.1.8"
