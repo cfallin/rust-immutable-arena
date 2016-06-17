@@ -4,6 +4,32 @@
 // Copyright (c) Chris Fallin <cfallin@c1f.net>. Released under the MIT
 // license.
 
+//! `immutable_arena` provides a type `Arena<T>` that are immutable once
+//! allocated, and a smart pointer type `Ref<'arena, T>` that may be set exactly
+//! once, allowing the user to create cycles among objects in the arena.
+//!
+//! Example usage:
+//!
+//! ```
+//! use immutable_arena::{Arena, Ref};
+//!
+//! struct S<'arena> { id: u32, next: Ref<'arena, S<'arena>> }
+//! fn alloc_cycle<'arena>(arena: &'arena Arena<S<'arena>>)
+//!     -> &'arena S<'arena> {
+//!     let s1 = arena.alloc(S { id: 1, next: Ref::empty() });
+//!     let s2 = arena.alloc(S { id: 2, next: Ref::empty() });
+//!     s1.next.set(s2);
+//!     s2.next.set(s1);
+//!     s1
+//! }
+//!
+//! fn test_cycle() {
+//!     let arena = Arena::new();
+//!     let s1 = alloc_cycle(&arena);
+//!     assert!(s1.next.next.id == s1.id);
+//! }
+//! ```
+
 extern crate typed_arena;
 
 use std::fmt;
@@ -20,29 +46,6 @@ use std::sync::atomic::{AtomicPtr, Ordering};
 /// set *exactly once*. The common usage pattern is to create objects and set
 /// all their refs before returning them to user code; the objects are
 /// subsequently completely immutable.
-///
-/// Example usage:
-/// 
-/// ```
-/// use immutable_arena::{Arena, Ref};
-///
-/// struct S<'arena> { id: u32, next: Ref<'arena, S<'arena>> }
-/// fn alloc_cycle<'arena>(arena: &'arena Arena<S<'arena>>)
-///     -> &'arena S<'arena> {
-///     let s1 = arena.alloc(S { id: 1, next: Ref::empty() });
-///     let s2 = arena.alloc(S { id: 2, next: Ref::empty() });
-///     s1.next.set(s2);
-///     s2.next.set(s1);
-///     s1
-/// }
-/// 
-/// fn test_cycle() {
-///     let arena = Arena::new();
-///     let s1 = alloc_cycle(&arena);
-///     assert!(s1.next.next.id == s1.id);
-/// }
-/// ```
-///
 pub struct Arena<T> {
     arena: typed_arena::Arena<T>,
 }
