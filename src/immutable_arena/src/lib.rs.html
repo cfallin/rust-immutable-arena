@@ -213,6 +213,7 @@
 <span id="169">169</span>
 <span id="170">170</span>
 <span id="171">171</span>
+<span id="172">172</span>
 </pre><pre class='rust '>
 <span class='comment'>// immutable_arena: a Rust crate for arenas of immutable-once-built objects</span>
 <span class='comment'>// with references to other objects in the arena.</span>
@@ -220,9 +221,10 @@
 <span class='comment'>// Copyright (c) Chris Fallin &lt;cfallin@c1f.net&gt;. Released under the MIT</span>
 <span class='comment'>// license.</span>
 
-<span class='doccomment'>//! `immutable_arena` provides a type `Arena&lt;T&gt;` that are immutable once</span>
-<span class='doccomment'>//! allocated, and a smart pointer type `Ref&lt;&#39;arena, T&gt;` that may be set exactly</span>
-<span class='doccomment'>//! once, allowing the user to create cycles among objects in the arena.</span>
+<span class='doccomment'>//! `immutable_arena` provides a type `Arena&lt;T&gt;` for objects that are immutable</span>
+<span class='doccomment'>//! once allocated, and a smart pointer type `Ref&lt;&#39;arena, T&gt;` that may be set</span>
+<span class='doccomment'>//! exactly once, allowing the user to create cycles among objects in the</span>
+<span class='doccomment'>//! arena.</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! Example usage:</span>
 <span class='doccomment'>//!</span>
