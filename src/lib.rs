@@ -62,7 +62,9 @@ impl<T> Arena<T> {
     }
 
     /// Allocate a new immutable object on the arena.
-    pub fn alloc<'arena>(&'arena self, t: T) -> &'arena T where T: 'arena {
+    pub fn alloc<'arena>(&'arena self, t: T) -> &'arena T
+        where T: 'arena
+    {
         self.arena.alloc(t)
     }
 }
@@ -84,6 +86,16 @@ impl<'arena, T> Ref<'arena, T>
     pub fn empty() -> Ref<'arena, T> {
         Ref {
             ptr: AtomicPtr::new(0 as *mut T),
+            _lifetime: PhantomData,
+        }
+    }
+
+    /// Create a new `Ref` from an existing ordinary borrow with the
+    /// appropriate lifetime. The resulting `Ref` may not be re-set to any
+    /// other value.
+    pub fn new(r: &'arena T) -> Ref<'arena, T> {
+        Ref {
+            ptr: AtomicPtr::new(r as *const T as *mut T),
             _lifetime: PhantomData,
         }
     }
@@ -168,5 +180,22 @@ mod test {
         assert!(y.b.id == 2);
         assert!(z.a.id == 0);
         assert!(z.b.id == 1);
+    }
+
+    #[test]
+    fn ref_from_borrow_test() {
+        let arena = Arena::new();
+        let x = arena.alloc(BasicTest {
+            id: 0,
+            a: Ref::empty(),
+            b: Ref::empty(),
+        });
+        let y = arena.alloc(BasicTest {
+            id: 1,
+            a: Ref::new(x),
+            b: Ref::empty(),
+        });
+
+        assert!(y.a.id == 0);
     }
 }
