@@ -214,6 +214,35 @@
 <span id="170">170</span>
 <span id="171">171</span>
 <span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
 </pre><pre class='rust '>
 <span class='comment'>// immutable_arena: a Rust crate for arenas of immutable-once-built objects</span>
 <span class='comment'>// with references to other objects in the arena.</span>
@@ -279,7 +308,9 @@
     }
 
     <span class='doccomment'>/// Allocate a new immutable object on the arena.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>alloc</span><span class='op'>&lt;</span><span class='lifetime'>&#39;arena</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;arena</span> <span class='self'>self</span>, <span class='ident'>t</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;arena</span> <span class='ident'>T</span> <span class='kw'>where</span> <span class='ident'>T</span>: <span class='lifetime'>&#39;arena</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>alloc</span><span class='op'>&lt;</span><span class='lifetime'>&#39;arena</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;arena</span> <span class='self'>self</span>, <span class='ident'>t</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;arena</span> <span class='ident'>T</span>
+        <span class='kw'>where</span> <span class='ident'>T</span>: <span class='lifetime'>&#39;arena</span>
+    {
         <span class='self'>self</span>.<span class='ident'>arena</span>.<span class='ident'>alloc</span>(<span class='ident'>t</span>)
     }
 }
@@ -301,6 +332,16 @@
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>empty</span>() <span class='op'>-&gt;</span> <span class='ident'>Ref</span><span class='op'>&lt;</span><span class='lifetime'>&#39;arena</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='ident'>Ref</span> {
             <span class='ident'>ptr</span>: <span class='ident'>AtomicPtr</span>::<span class='ident'>new</span>(<span class='number'>0</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>),
+            <span class='ident'>_lifetime</span>: <span class='ident'>PhantomData</span>,
+        }
+    }
+
+    <span class='doccomment'>/// Create a new `Ref` from an existing ordinary borrow with the</span>
+    <span class='doccomment'>/// appropriate lifetime. The resulting `Ref` may not be re-set to any</span>
+    <span class='doccomment'>/// other value.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>r</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;arena</span> <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>Ref</span><span class='op'>&lt;</span><span class='lifetime'>&#39;arena</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
+        <span class='ident'>Ref</span> {
+            <span class='ident'>ptr</span>: <span class='ident'>AtomicPtr</span>::<span class='ident'>new</span>(<span class='ident'>r</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>T</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>),
             <span class='ident'>_lifetime</span>: <span class='ident'>PhantomData</span>,
         }
     }
@@ -385,6 +426,23 @@
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>y</span>.<span class='ident'>b</span>.<span class='ident'>id</span> <span class='op'>==</span> <span class='number'>2</span>);
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>z</span>.<span class='ident'>a</span>.<span class='ident'>id</span> <span class='op'>==</span> <span class='number'>0</span>);
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>z</span>.<span class='ident'>b</span>.<span class='ident'>id</span> <span class='op'>==</span> <span class='number'>1</span>);
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>ref_from_borrow_test</span>() {
+        <span class='kw'>let</span> <span class='ident'>arena</span> <span class='op'>=</span> <span class='ident'>Arena</span>::<span class='ident'>new</span>();
+        <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>arena</span>.<span class='ident'>alloc</span>(<span class='ident'>BasicTest</span> {
+            <span class='ident'>id</span>: <span class='number'>0</span>,
+            <span class='ident'>a</span>: <span class='ident'>Ref</span>::<span class='ident'>empty</span>(),
+            <span class='ident'>b</span>: <span class='ident'>Ref</span>::<span class='ident'>empty</span>(),
+        });
+        <span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='ident'>arena</span>.<span class='ident'>alloc</span>(<span class='ident'>BasicTest</span> {
+            <span class='ident'>id</span>: <span class='number'>1</span>,
+            <span class='ident'>a</span>: <span class='ident'>Ref</span>::<span class='ident'>new</span>(<span class='ident'>x</span>),
+            <span class='ident'>b</span>: <span class='ident'>Ref</span>::<span class='ident'>empty</span>(),
+        });
+
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>y</span>.<span class='ident'>a</span>.<span class='ident'>id</span> <span class='op'>==</span> <span class='number'>0</span>);
     }
 }
 </pre>
