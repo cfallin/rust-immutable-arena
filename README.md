@@ -38,3 +38,6 @@ fn test_cycle() {
     assert!(s1.next.next.id == s1.id);
 }
 ```
+
+`immutable_arena` is Copyright (c) 2016 by Chris Fallin &lt;cfallin@c1f.net&gt;
+and is released under the MIT license. See the `LICENSE` file for details.
