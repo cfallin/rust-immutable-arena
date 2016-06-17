@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `Arena` struct in crate `immutable_arena`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, Arena">
+    <meta name="description" content="API documentation for the Rust `typed_arena` crate.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, typed_arena">
 
-    <title>immutable_arena::Arena - Rust</title>
+    <title>typed_arena - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>immutable_arena</a></p><script>window.sidebarCurrent = {name: 'Arena', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'></p><script>window.sidebarCurrent = {name: 'typed_arena', ty: 'mod', relpath: '../'};</script>
     </nav>
 
     <nav class="sub">
@@ -42,28 +42,34 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>immutable_arena</a>::<wbr><a class='struct' href=''>Arena</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>typed_arena</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-10' class='srclink' href='../src/immutable_arena/src/lib.rs.html#49-51' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct Arena&lt;T&gt; {
-    // some fields omitted
-}</pre><div class='docblock'><p>An <code>Arena&lt;T&gt;</code> is a container of objects of type <code>T</code> that, once allocated,
-live as long as the containing arena. Within the arena, objects may refer
-to other objects using the <code>Ref&lt;&#39;arena, T&gt;</code> smart-pointer type. These
-object references are allowed to form cycles. Once created, an object is
-immutable. However, any <code>Ref&lt;&#39;arena, T&gt;</code> instances within the object may be
-set <em>exactly once</em>. The common usage pattern is to create objects and set
-all their refs before returning them to user code; the objects are
-subsequently completely immutable.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;T&gt; <a class='struct' href='../immutable_arena/struct.Arena.html' title='immutable_arena::Arena'>Arena</a>&lt;T&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-13' class='srclink' href='../src/immutable_arena/src/lib.rs.html#53-63' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../immutable_arena/struct.Arena.html' title='immutable_arena::Arena'>Arena</a>&lt;T&gt;</code></h4>
-<div class='docblock'><p>Create a new immutable-object arena.</p>
-</div><h4 id='method.alloc' class='method'><code>fn <a href='#method.alloc' class='fnname'>alloc</a>&lt;'arena&gt;(&amp;'arena self, t: T) -&gt; &amp;'arena T <span class='where'>where T: 'arena</span></code></h4>
-<div class='docblock'><p>Allocate a new immutable object on the arena.</p>
-</div></div></section>
+               </span><a id='src-0' class='srclink' href='../src/typed_arena/lib.rs.html#1-142' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>The arena, a fast but limited type of allocator.</p>
+
+<p>Arenas are a type of allocator that destroy the objects within,
+all at once, once the arena itself is destroyed.
+They do not support deallocation of individual objects while the arena itself is still alive.
+The benefit of an arena is very fast allocation; just a vector push.</p>
+
+<p>This is an equivalent of
+<a href="http://doc.rust-lang.org/arena/struct.TypedArena.html"><code>arena::TypedArena</code></a>
+distributed with rustc, but is available of Rust beta/stable.</p>
+
+<p>It is slightly less efficient, but simpler internally and uses much less unsafe code.
+It is based on a <code>Vec&lt;Vec&lt;T&gt;&gt;</code> instead of raw pointers and manual drops.</p>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Arena.html'
+                                  title='typed_arena::Arena'>Arena</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr></table></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -118,7 +124,7 @@ subsequently completely immutable.</p>
 
     <script>
         window.rootPath = "../";
-        window.currentCrate = "immutable_arena";
+        window.currentCrate = "typed_arena";
         window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>
