@@ -2,7 +2,10 @@
 name = "immutable_arena"
 version = "0.1.0"
 authors = ["Chris Fallin <cfallin@c1f.net>"]
+description = "An arena for immutable-once-built objects with possibly cyclic references"
+repository = "https://github.com/cfallin/rust-immutable-arena"
+documentation = "https://cfallin.github.io/rust-immutable-arena/immutable_arena/"
+license = "MIT"
 
 [dependencies]
 typed-arena = "^1.2.0"
-smallvec = "^0.1.8"
