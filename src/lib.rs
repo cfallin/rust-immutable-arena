@@ -4,9 +4,10 @@
 // Copyright (c) Chris Fallin <cfallin@c1f.net>. Released under the MIT
 // license.
 
-//! `immutable_arena` provides a type `Arena<T>` that are immutable once
-//! allocated, and a smart pointer type `Ref<'arena, T>` that may be set exactly
-//! once, allowing the user to create cycles among objects in the arena.
+//! `immutable_arena` provides a type `Arena<T>` for objects that are immutable
+//! once allocated, and a smart pointer type `Ref<'arena, T>` that may be set
+//! exactly once, allowing the user to create cycles among objects in the
+//! arena.
 //!
 //! Example usage:
 //!
