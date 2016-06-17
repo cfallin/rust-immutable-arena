@@ -13,7 +13,11 @@
 //! ```
 //! use immutable_arena::{Arena, Ref};
 //!
-//! struct S<'arena> { id: u32, next: Ref<'arena, S<'arena>> }
+//! struct S<'arena> {
+//!     id: u32,
+//!     next: Ref<'arena, S<'arena>>,
+//! }
+//!
 //! fn alloc_cycle<'arena>(arena: &'arena Arena<S<'arena>>)
 //!     -> &'arena S<'arena> {
 //!     let s1 = arena.alloc(S { id: 1, next: Ref::empty() });
